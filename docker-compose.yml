@@ -1,0 +1,22 @@
+version: '3'
+services:
+  db:
+    image: postgres
+    volumes:
+      - ./tmp/db:/var/lib/postgresql/data
+    environment:
+      - "POSTGRES_USER=xxxx" # 追記
+      - "POSTGRES_PASSWORD=xxxx" # 追記
+  web:
+    build: .
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
+    volumes:
+      - .:/myapp
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    environment:
+      - "SELENIUM_DRIVER_URL=http://selenium_chrome:4444/wd/hub" # 追記
+  selenium_chrome:
+    image: selenium/standalone-chrome-debug # 追記
