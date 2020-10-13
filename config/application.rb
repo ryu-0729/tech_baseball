@@ -10,6 +10,7 @@ module Myapp
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 5.2
+    config.generators.templete_engine = :slim
 
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration can go into files in config/initializers
@@ -19,7 +20,8 @@ module Myapp
       g.test_framework :rspec,
       view_specs: false,
       helper_specs: false,
-      routing_spec: false
+      routing_spec: false,
+      request_specs: false
     end
   end
 end
