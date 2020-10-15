@@ -61,6 +61,14 @@ RSpec.configure do |config|
   config.filter_rails_from_backtrace!
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
+  def sign_in(user)
+    session[:user_id]= user.id
+  end
+  
+  def is_logged_in?
+    !session[:user_id].nil?
+  end
+  
 end
 
 Shoulda::Matchers.configure do |config|

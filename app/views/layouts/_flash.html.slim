@@ -2,5 +2,9 @@
   .alert.alert-success
     = flash[:success]
 
+- if flash[:danger]
+  .alert.alert-danger
+    = flash[:danger]
+
 //- flash.each do |message_type, message|
 //  .alert.alert- #{message_type}
