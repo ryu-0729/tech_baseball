@@ -12,6 +12,7 @@ RSpec.describe "Users", type: :system do
       fill_in "Confirmation",	with: "password"
       click_button "Create my account"
       expect(page).to have_content "Welcome to the Tech Baseball!"
+      expect(page).not_to have_link "Log in"
     }.to change(User, :count).by(1)
   end
 
