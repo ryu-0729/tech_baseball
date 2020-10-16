@@ -18,7 +18,7 @@ RSpec.describe SessionsController, type: :controller do
     end
   end
 
-  describe "#destroy", focus: true do
+  describe "#destroy" do
     let(:user) { FactoryBot.create(:user) } 
     it "log out" do
       sign_in user
