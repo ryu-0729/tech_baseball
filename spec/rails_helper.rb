@@ -69,6 +69,22 @@ RSpec.configure do |config|
     !session[:user_id].nil?
   end
   
+  def sign_in_as(user)
+    post login_path, params: {
+      session: {
+        email: user.email,
+        password: user.password
+      }
+    }
+  end
+  
+  def valid_login(user)
+    visit root_path
+    click_link "Log in"
+    fill_in "Email",	with: user.email
+    fill_in "Password",	with: user.password
+    click_button "Log in"
+  end
 end
 
 Shoulda::Matchers.configure do |config|

@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe "LoginLogout", type: :request, focus: true do
+RSpec.describe "LoginLogout", type: :request do
   let(:user) { FactoryBot.create(:user) }
 
   #ログインのメソッド
