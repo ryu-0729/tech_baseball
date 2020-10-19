@@ -6,5 +6,12 @@
   .alert.alert-danger
     = flash[:danger]
 
+- if flash[:info]
+  .alert.alert-info
+    = flash[:info]
+
+- if flash[:warning]
+  .alert.alert-warning
+    = flash[:warning]
 //- flash.each do |message_type, message|
 //  .alert.alert- #{message_type}

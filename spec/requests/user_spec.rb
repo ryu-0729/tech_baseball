@@ -85,7 +85,7 @@ RSpec.describe "User", type: :request do
     end
   end
 
-  describe "#destroy", focus: true do
+  describe "#destroy" do
     #admin属性の変更の禁止
     #it "should not allow the admin attribute to be edited via the web" do
       #sign_in_as other_user
@@ -127,6 +127,55 @@ RSpec.describe "User", type: :request do
         expect(response).to have_http_status "302"
         expect(response).to redirect_to root_url
       end
+    end
+  end
+  #アカウント有効化のテストも含めて#createをテストする
+  describe "#create" do
+    include ActiveJob::TestHelper
+    #アカウントの登録ができる
+    it "is valid" do
+      perform_enqueued_jobs do
+        expect{
+          post users_path, params: {
+            user: {
+              name: "ExampleUser",
+              email: "user@example.com",
+              password: "password",
+              password_confirmation: "password"
+            }
+          }
+        }.to change(User, :count).by(1)
+        expect(response).to redirect_to root_url
+        user = assigns(:user)
+        #有効化していないユーザーでログイン
+        sign_in_as user
+        expect(session[:user_id]).to be_falsey
+        #有効化トークンが不正な場合
+        get edit_account_activation_path("invalid token", email: user.email)
+        expect(session[:user_id]).to be_falsey
+        #トークンは正しいがメールアドレスが無効な場合
+        get edit_account_activation_path(user.activation_token, email: 'wrong')
+        expect(session[:user_id]).to be_falsey
+        #有効化トークンが正しい場合
+        get edit_account_activation_path(user.activation_token, email: user.email)
+        expect(session[:user_id]).to eq user.id
+        expect(user.name).to eq "ExampleUser"
+        expect(user.email).to eq "user@example.com"
+        expect(user.password).to eq "password"
+      end
+    end
+  end
+
+  describe "#show" do
+    let(:non_activated_user) { FactoryBot.create(:user, :non_activated_user) }
+    
+    #有効化されてないユーザーの詳細ページにはアクセスできない
+    it "show only activated user" do
+      sign_in_as user
+      get user_path(user)
+      expect(response).to be_success
+      get user_path(non_activated_user)
+      expect(response).to redirect_to root_url
     end
   end
 end

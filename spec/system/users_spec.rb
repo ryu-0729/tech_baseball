@@ -12,8 +12,8 @@ RSpec.describe "Users", type: :system do
       fill_in "Password",	with: "password"
       fill_in "Confirmation",	with: "password"
       click_button "Create my account"
-      expect(page).to have_content "Welcome to the Tech Baseball!"
-      expect(page).not_to have_link "Log in"
+      expect(page).to have_content "Please check your email to activate your account."
+      #expect(page).not_to have_link "Log in"
     }.to change(User, :count).by(1)
   end
 
@@ -63,7 +63,18 @@ RSpec.describe "Users", type: :system do
       click_button "Save changes"
       expect(user.reload.email).not_to eq "foo@invalid"
     end
-    
   end
   
+  #ユーザー一覧のテスト
+  describe "users index" do
+    let(:non_activated_user) { FactoryBot.create(:user, :non_activated_user) }
+    
+    #ユーザー一覧には有効化されたユーザーのみ表示されること
+    it "index only activated user" do
+      valid_login(user)
+      click_link "Users"
+      expect(page).to have_link user.name
+      expect(page).not_to have_link non_activated_user.name
+    end
+  end
 end
