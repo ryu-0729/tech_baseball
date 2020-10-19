@@ -42,7 +42,6 @@ RSpec.describe "LoginLogout", type: :request do
     
   end
   
-  
   #ログイン、ログアウトができること
   it "login" do
     get login_path
